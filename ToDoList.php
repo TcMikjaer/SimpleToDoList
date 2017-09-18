@@ -2,29 +2,33 @@
 require "Task.php";
 require 'Database.php';
 require "Header.php";
-require "CRUD.php";
+require "Query.php";
 
-class ToDoList 
+class ToDoList
 {
     private $DB;
-    private $CRUD;
     public $UPDATEID = null;
- 
+    
     public function __construct() 
     {
         $this->DB = new Database();
-        $this->CRUD = new CRUD($this->DB);
     }
     
     public function update() 
     {
         if (!empty(filter_input(INPUT_GET, 'CREATE')))
         {   
-            $this->CRUD->create();
+            $test = new Query($this->DB);
+            $test->execute("INSERT INTO tasks(description) VALUES(:description)", [':description' => addslashes(filter_input(INPUT_GET, 'description'))]);
+            header("Location: Index.php");
+            die();
         }
         elseif (!empty(filter_input(INPUT_GET, 'DELETE'))) 
         {
-            $this->CRUD->delete();
+            $test = new Query($this->DB);
+            $test->execute("DELETE FROM tasks WHERE id = :id", [':id' => filter_input(INPUT_GET, 'id')]);
+            header("Location: Index.php");
+            die();
         }
         elseif (!empty(filter_input(INPUT_GET, 'INITUPDATE'))) 
         {
@@ -33,8 +37,39 @@ class ToDoList
         }
         elseif (!empty(filter_input(INPUT_GET, 'UPDATE'))) 
         {
-            $this->CRUD->update(filter_input(INPUT_GET, 'id'), filter_input(INPUT_GET, 'descriptionUpdated'));
+            $test = new Query($this->DB);
+            $test->execute("UPDATE Tasks SET description = :description WHERE id = :id", 
+                [
+                    ':id' => filter_input(INPUT_GET, 'id'),
+                    ':description' => filter_input(INPUT_GET, 'descriptionUpdated')
+                ]
+            );
+            header("Location: Index.php");
+            die();
         }
-        return $this->CRUD->read();
+    }
+    
+    public function getTasks()
+    {
+//        $test = new Query($this->DB);
+//        $test->execute("SELECT * FROM Tasks ORDER BY id DESC", null);
+//        return $test;  
+        try 
+        {
+            $PDO = $this->DB->connect();
+            $statement = $PDO->query("SELECT * FROM Tasks ORDER BY id DESC");
+            $statement->execute(null);
+            $result = [];
+            while ($row = $statement->fetch())
+            {
+                array_push($result,new Task($row['id'], $row['description']));
+            } 
+            $this->DB->disconnect();
+            return $result;  
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+        }
     }
 }
