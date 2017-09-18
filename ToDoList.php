@@ -51,9 +51,11 @@ class ToDoList
     
     public function getTasks()
     {
+        
 //        $test = new Query($this->DB);
 //        $test->execute("SELECT * FROM Tasks ORDER BY id DESC", null);
 //        return $test;  
+        
         try 
         {
             $PDO = $this->DB->connect();

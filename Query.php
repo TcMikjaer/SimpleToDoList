@@ -16,13 +16,13 @@ class Query
             $PDO = $this->db->connect();
             $statement = $PDO->prepare($query);
             $statement->execute($params);
-//            $result = [];
-//            while ($row = $statement->fetch())
-//            {
-//                array_push($result,new Task($row['id'], $row['description']));
-//            } 
+            $result = [];
+            while ($row = $statement->fetch())
+            {
+                array_push($result,new Task($row['id'], $row['description']));
+            } 
             $this->db->disconnect();
-//            return $result;  
+            return $result;  
         }
         catch(PDOException $e)
         {
