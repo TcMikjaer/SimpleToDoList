@@ -1,4 +1,3 @@
-<!--Final so far-->
 <?php
 
 class Task {
