@@ -2,7 +2,8 @@
 
 require "ToDoList.php";
 $toDoList = new ToDoList();
-$tasks = $toDoList->update(); 
+$toDoList->update();
+$tasks = $toDoList->getTasks();
 
 ?>
 
