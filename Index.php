@@ -1,3 +1,4 @@
+<!--Final so far-->
 <?php 
 
 require "ToDoList.php";
@@ -45,5 +46,5 @@ $tasks = $toDoList->update();
         </table>
     </div>
 </div>
-
-<?php require "Footer.php";
+</body>
+</html>
