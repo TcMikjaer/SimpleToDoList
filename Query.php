@@ -9,7 +9,7 @@ class Query
         $this->db = $db;
     }
     
-    public function execute($query, $params)
+    public function execute($query, $params = null)
     {
         try 
         {
@@ -20,7 +20,8 @@ class Query
             while ($row = $statement->fetch())
             {
                 array_push($result,new Task($row['id'], $row['description']));
-            } 
+            }
+
             $this->db->disconnect();
             return $result;  
         }
